@@ -13,8 +13,10 @@ namespace GestionTaches
                 Console.WriteLine("Gestionnaire de Tâches Personnelles");
                 Console.WriteLine("1. Afficher les Tâches");
                 Console.WriteLine("2. Ajouter une Tâche");
-                Console.WriteLine("3. Marquer une Tâche comme Terminée");
-                Console.WriteLine("4. Quitter");
+                Console.WriteLine("3. Supprimer une Tâche");
+                Console.WriteLine("4. Marquer une Tâche comme Terminée");
+                Console.WriteLine("5. Mettre une priorité");
+                Console.WriteLine("6. Quitter");
 
                 Console.Write("Veuillez choisir une option : ");
                 string choix = Console.ReadLine();
@@ -28,9 +30,15 @@ namespace GestionTaches
                         gestionnaire.AjouterTache();
                         break;
                     case "3":
-                        gestionnaire.MarquerTacheTerminee();
+                        gestionnaire.SupprimerTache();
                         break;
                     case "4":
+                        gestionnaire.MarquerTacheTerminee();
+                        break;
+                    case "5":
+                        gestionnaire.MettrePrioritee();
+                        break;
+                    case "6":
                         Environment.Exit(0);
                         break;
                     default:
