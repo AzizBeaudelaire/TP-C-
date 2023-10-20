@@ -28,6 +28,23 @@ namespace WebApi.Controllers
             return Ok($"Post:  {Post.Task} id: {Post.TaskId} has been created");
         }
         
-        
+        [HttpDelete("delete/{taskId}")]
+        public ActionResult<string> DeleteTask(int taskId)
+        {
+            // Recherchez la tâche dans la liste par son ID
+            Post taskToRemove = ListPosts.listPosts.Find(task => task.TaskId == taskId);
+
+            if (taskToRemove == null)
+            {
+                return NotFound($"Task with ID {taskId} not found.");
+            }
+
+            // Supprimez la tâche de la liste
+            ListPosts.listPosts.Remove(taskToRemove);
+
+            return Ok($"Task with ID {taskId} has been deleted.");
+        }
+
+
     }
 }
