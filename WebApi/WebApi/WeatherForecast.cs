@@ -1,12 +1,22 @@
-namespace WebApi;
+using Microsoft.AspNetCore.Server.Kestrel.Transport.Quic;
 
-public class Trello
+namespace WebApi.Models
 {
-    public DateOnly Date { get; set; }
-
-    public int TemperatureC { get; set; }
-
-    public int AddPost { get; set; }
-
-    public string? Summary { get; set; }
+    public static class ListPosts {
+        public static List<Post> listPosts = new();
+    }
+    
+    public class Post
+    {
+        public static int TaskId { get; set; }
+        
+        public int Id { get; set; }
+        public string Task { get; set; }
+        public Post(string post)
+        {
+            Task = post;
+            TaskId = TaskId + 1;
+            Id = TaskId;
+        }
+    }
 }
