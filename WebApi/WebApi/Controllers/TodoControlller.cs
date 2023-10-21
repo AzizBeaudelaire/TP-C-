@@ -21,12 +21,40 @@
                 return Ok(ListPosts.listPosts);
             }
             
-            [HttpPost("add/{content}")]
-            public ActionResult<Post> Get(string content ) {
-                Post Post = new Post(content);
-                ListPosts.listPosts.Add(Post);
-                return Ok($"Post:  {Post.Task} id: {Post.TaskId} has been created");
+            [HttpGet("get/{id}")]
+            public ActionResult<Post> GetTodoById(int id)
+            {
+                Post todo = ListPosts.GetPostById(id);
+
+                if (todo == null)
+                {
+                    return NotFound($"Task with ID {id} not found.");
+                }
+
+                return Ok(todo);
             }
+            
+            [HttpPost("add")]
+            public ActionResult<Post> AddTodo([FromBody] Post model)
+            {
+                // Vérifiez si le modèle est valide (par exemple, le contenu n'est pas vide).
+                if (string.IsNullOrEmpty(model.Task))
+                {
+                    return BadRequest("Task content cannot be empty.");
+                }
+
+                // Générez un nouvel identifiant pour la tâche.
+                model.TaskId = ListPosts.listPosts.Count + 1;
+                model.Id = model.TaskId;
+
+                // Ajoutez la nouvelle tâche à la liste.
+                ListPosts.AddPost(model);
+
+                // Convention REST : retournez un code 201 Created avec un en-tête Location.
+                // L'en-tête Location spécifie l'URL pour récupérer cet élément nouvellement créé.
+                return CreatedAtAction(nameof(GetTodoById), new { id = model.Id }, model);
+            }
+
             
              [HttpPut("update/{taskId}")]
             public ActionResult<string> UpdateTask(int taskId, [FromBody] string newContent)
@@ -43,6 +71,27 @@
                 taskToUpdate.Task = newContent;
 
                 return Ok($"Task with ID {taskId} has been updated.");
+            }
+            
+            
+            [HttpPatch("set-done/{id}")]
+            public ActionResult SetTodoAsDone(long id)
+            {
+                Post post = ListPosts.listPosts.Find(t => t.TaskId == id);
+
+                if (post == null)
+                {
+                    return NotFound($"Post with ID {id} not found.");
+                }
+
+                if (post.IsDone)
+                {
+                    return BadRequest("Post is already done.");
+                }
+
+                post.IsDone = true;
+
+                return Ok();    
             }
             
             [HttpDelete("delete/{taskId}")]

@@ -47,12 +47,14 @@ namespace WebApi.Models
         public int TaskId { get; set; }
         public int Id { get; set; }
         public string Task { get; set; }
+        public bool IsDone { get; set; } // Ajout de la propriété IsDone
 
-        public Post(string post)
+        public Post(string task, bool isDone) // Ajout d'un paramètre pour IsDone
         {
-            Task = post;
+            Task = task;
             TaskId = ListPosts.listPosts.Count + 1;
             Id = TaskId;
+            IsDone = isDone; // Affectation de la valeur d'IsDone
         }
     }
 }
