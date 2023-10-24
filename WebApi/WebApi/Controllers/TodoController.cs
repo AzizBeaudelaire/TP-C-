@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using WebApi.Models;
 
@@ -16,24 +17,20 @@ namespace WebApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet("TaskBoard")]
-        public ActionResult<IEnumerable<Post>> Get()
-        {
-            // Tri des tâches par priorité en ordre croissant
-            var sortedTasks = ListPosts.listPosts.OrderBy(task => task.Priority).ToList();
-            return Ok(sortedTasks);
-        }
-
         [HttpGet("Search/{id}")]
         public ActionResult<Post> GetTodoById(int id)
         {
+            // Recherche une tâche par son ID en utilisant la méthode GetPostById de ListPosts.
             Post todo = ListPosts.GetPostById(id);
 
+            // Vérifie si la tâche est introuvable.
             if (todo == null)
             {
+                // Retourne une réponse 404 NotFound avec un message.
                 return NotFound($"Task with ID {id} not found.");
             }
 
+            // Retourne la tâche trouvée en réponse.
             return Ok(todo);
         }
 
@@ -43,13 +40,14 @@ namespace WebApi.Controllers
             // Vérifiez si le modèle est valide, y compris la priorité (par exemple, le contenu n'est pas vide et la priorité est valide).
             if (string.IsNullOrEmpty(model.Task) || !Enum.IsDefined(typeof(Priority), model.Priority))
             {
+                // Retourne une réponse BadRequest avec un message d'erreur.
                 return BadRequest("Task content cannot be empty, and priority must be valid.");
             }
 
             // Générez un nouvel identifiant pour la tâche.
             model.Id = ListPosts.listPosts.Count + 1; // Utilisation de la propriété Id
 
-            // Ajoutez la nouvelle tâche à la liste.
+            // Ajoutez la nouvelle tâche à la liste en utilisant la méthode AddPost de ListPosts.
             ListPosts.AddPost(model);
 
             // Convention REST : retournez un code 201 Created avec un en-tête Location.
@@ -65,33 +63,15 @@ namespace WebApi.Controllers
 
             if (taskToUpdate == null)
             {
+                // Retourne une réponse 404 NotFound avec un message d'erreur.
                 return NotFound($"Task with ID {taskId} not found.");
             }
 
-            // Mettez à jour le contenu de la tâche
+            // Mettez à jour le contenu de la tâche.
             taskToUpdate.Task = newContent;
 
+            // Retourne une réponse Ok avec un message de réussite.
             return Ok($"Task with ID {taskId} has been updated.");
-        }
-
-        [HttpPatch("Set-as-done/{id}")]
-        public ActionResult SetTodoAsDone(long id)
-        {
-            Post post = ListPosts.listPosts.Find(t => t.Id == id);
-
-            if (post == null)
-            {
-                return NotFound($"Post with ID {id} not found.");
-            }
-
-            if (post.IsDone)
-            {
-                return BadRequest("Post is already done.");
-            }
-
-            post.IsDone = true;
-
-            return Ok();
         }
 
         [HttpDelete("Delete-a-task/{taskId}")]
@@ -102,12 +82,14 @@ namespace WebApi.Controllers
 
             if (taskToRemove == null)
             {
+                // Retourne une réponse 404 NotFound avec un message d'erreur.
                 return NotFound($"Task with ID {taskId} not found.");
             }
 
-            // Supprimez la tâche de la liste
+            // Supprimez la tâche de la liste.
             ListPosts.listPosts.Remove(taskToRemove);
 
+            // Retourne une réponse Ok avec un message de réussite.
             return Ok($"Task with ID {taskId} has been deleted.");
         }
     }
