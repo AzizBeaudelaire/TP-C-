@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApi.Models
 {
@@ -15,15 +16,13 @@ namespace WebApi.Models
         public string Task { get; set; }
         public bool IsDone { get; set; }
         public Priority Priority { get; set; }
-        public List<string> Tags { get; set; }
 
-        public Post(string task, bool isDone, Priority priority, List<string> tags)
+        public Post(string task, bool isDone, Priority priority)
         {
             Task = task;
             Id = ListPosts.listPosts.Count + 1;
             IsDone = isDone;
             Priority = priority;
-            Tags = tags;
         }
     }
 
@@ -40,9 +39,14 @@ namespace WebApi.Models
 
     public class PostGroup
     {
-        public Priority Priority { get; set; }
-        public List<string> Tags { get; set; }
+        [Display(Order = 2)]
         public List<Post> Posts { get; set; }
+
+        [Display(Order = 0)]
+        public Priority Priority { get; set; }
+
+        [Display(Order = 1)]
+        public List<string> Tags { get; set; }
     }
 
     public class Board
