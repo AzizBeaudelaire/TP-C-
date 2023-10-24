@@ -1,14 +1,7 @@
-using System;
 using System.Collections.Generic;
 
 namespace WebApi.Models
 {
-    public class PostGroup
-    {
-        public string Tag { get; set; }
-        public List<Post> Posts { get; set; }
-    }
-
     public enum Priority
     {
         Low,
@@ -43,6 +36,13 @@ namespace WebApi.Models
         {
             Name = name;
         }
+    }
+
+    public class PostGroup
+    {
+        public Priority Priority { get; set; }
+        public List<string> Tags { get; set; }
+        public List<Post> Posts { get; set; }
     }
 
     public class Board

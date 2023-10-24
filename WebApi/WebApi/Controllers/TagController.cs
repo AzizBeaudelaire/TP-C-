@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
@@ -24,13 +25,13 @@ namespace WebApi.Controllers
                 return BadRequest("Tag content cannot be empty.");
             }
 
-            var newTag = new Tag(tag); // Fournissez le nom (tag) comme argument au constructeur
+            var newTag = new Tag(tag);
+            newTag.Id = tagId; // Attribution de l'ID unique
             tags.Add(newTag);
             tagId++;
 
             return CreatedAtAction(nameof(GetTagById), new { id = newTag.Id }, newTag);
         }
-
 
         [HttpPut("Update-a-tag/{id}")]
         public ActionResult<string> UpdateTag(int id, [FromBody] string updatedTag)
