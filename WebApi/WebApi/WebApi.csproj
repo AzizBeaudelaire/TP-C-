@@ -11,4 +11,29 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="API C\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="API C\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="API C\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="API C\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="API C\API C\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="API C\API C\appsettings.json" />
+      <_ContentIncludedByDefault Remove="API C\API C\obj\API C.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="API C\API C\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="API C\API C\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="API C\API C\Properties\launchSettings.json" />
+    </ItemGroup>
+
 </Project>

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/hugo/Desktop/Projet cour/delivery/Ynov/b2/C#/API/TP C#/TP-C-/WebApi/WebApi/WebApi.csproj": {}
+    "/home/hugo/Desktop/Projet cour/delivery/Ynov/B2 2023-2024/C#/API/TP C#/TP-C-/WebApi/WebApi/WebApi.csproj": {}
   },
   "projects": {
-    "/home/hugo/Desktop/Projet cour/delivery/Ynov/b2/C#/API/TP C#/TP-C-/WebApi/WebApi/WebApi.csproj": {
+    "/home/hugo/Desktop/Projet cour/delivery/Ynov/B2 2023-2024/C#/API/TP C#/TP-C-/WebApi/WebApi/WebApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/hugo/Desktop/Projet cour/delivery/Ynov/b2/C#/API/TP C#/TP-C-/WebApi/WebApi/WebApi.csproj",
+        "projectUniqueName": "/home/hugo/Desktop/Projet cour/delivery/Ynov/B2 2023-2024/C#/API/TP C#/TP-C-/WebApi/WebApi/WebApi.csproj",
         "projectName": "WebApi",
-        "projectPath": "/home/hugo/Desktop/Projet cour/delivery/Ynov/b2/C#/API/TP C#/TP-C-/WebApi/WebApi/WebApi.csproj",
+        "projectPath": "/home/hugo/Desktop/Projet cour/delivery/Ynov/B2 2023-2024/C#/API/TP C#/TP-C-/WebApi/WebApi/WebApi.csproj",
         "packagesPath": "/home/hugo/.nuget/packages/",
-        "outputPath": "/home/hugo/Desktop/Projet cour/delivery/Ynov/b2/C#/API/TP C#/TP-C-/WebApi/WebApi/obj/",
+        "outputPath": "/home/hugo/Desktop/Projet cour/delivery/Ynov/B2 2023-2024/C#/API/TP C#/TP-C-/WebApi/WebApi/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/hugo/.nuget/NuGet/NuGet.Config"

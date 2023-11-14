@@ -20,14 +20,14 @@ namespace WebApi.Controllers
         [HttpGet("Search/{id}")]
         public ActionResult<Post> GetTodoById(int id)
         {
-            // Recherche une tâche par son ID en utilisant la méthode GetPostById de ListPosts.
+            // Action pour rechercher une tâche par son ID en utilisant la méthode GetPostById de ListPosts.
             Post todo = ListPosts.GetPostById(id);
 
             // Vérifie si la tâche est introuvable.
             if (todo == null)
             {
                 // Retourne une réponse 404 NotFound avec un message.
-                return NotFound($"Task with ID {id} not found.");
+                return NotFound($"Tâche avec l'ID {id} introuvable.");
             }
 
             // Retourne la tâche trouvée en réponse.
@@ -41,7 +41,7 @@ namespace WebApi.Controllers
             if (string.IsNullOrEmpty(model.Task) || !Enum.IsDefined(typeof(Priority), model.Priority))
             {
                 // Retourne une réponse BadRequest avec un message d'erreur.
-                return BadRequest("Task content cannot be empty, and priority must be valid.");
+                return BadRequest("Le contenu de la tâche ne peut pas être vide, et la priorité doit être valide.");
             }
 
             // Générez un nouvel identifiant pour la tâche.
@@ -61,17 +61,17 @@ namespace WebApi.Controllers
             // Recherchez la tâche dans la liste par son ID
             Post taskToUpdate = ListPosts.listPosts.Find(task => task.Id == taskId);
 
-            if (taskToUpdate == null)
+            if (taskToUpdate is null)
             {
                 // Retourne une réponse 404 NotFound avec un message d'erreur.
-                return NotFound($"Task with ID {taskId} not found.");
+                return NotFound($"Tâche avec l'ID {taskId} introuvable.");
             }
 
             // Mettez à jour le contenu de la tâche.
             taskToUpdate.Task = newContent;
 
             // Retourne une réponse Ok avec un message de réussite.
-            return Ok($"Task with ID {taskId} has been updated.");
+            return Ok($"Tâche avec l'ID {taskId} a été mise à jour.");
         }
 
         [HttpDelete("Delete-a-task/{taskId}")]
@@ -80,17 +80,17 @@ namespace WebApi.Controllers
             // Recherchez la tâche dans la liste par son ID
             Post taskToRemove = ListPosts.listPosts.Find(task => task.Id == taskId);
 
-            if (taskToRemove == null)
+            if (taskToRemove is null)
             {
                 // Retourne une réponse 404 NotFound avec un message d'erreur.
-                return NotFound($"Task with ID {taskId} not found.");
+                return NotFound($"Tâche avec l'ID {taskId} introuvable.");
             }
 
             // Supprimez la tâche de la liste.
             ListPosts.listPosts.Remove(taskToRemove);
 
             // Retourne une réponse Ok avec un message de réussite.
-            return Ok($"Task with ID {taskId} has been deleted.");
+            return Ok($"Tâche avec l'ID {taskId} a été supprimée.");
         }
     }
 }

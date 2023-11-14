@@ -14,6 +14,7 @@ namespace WebApi.Controllers
         [HttpGet("TagBoard")]
         public ActionResult<IEnumerable<Tag>> GetTags()
         {
+            // Action pour obtenir la liste des tags.
             return Ok(tags);
         }
 
@@ -22,14 +23,17 @@ namespace WebApi.Controllers
         {
             if (string.IsNullOrEmpty(tag))
             {
-                return BadRequest("Tag content cannot be empty.");
+                // Si le contenu du tag est vide, renvoyez une réponse BadRequest avec un message d'erreur.
+                return BadRequest("Le contenu du tag ne peut pas être vide.");
             }
 
+            // Créez un nouveau tag à partir de la chaîne de caractères fournie.
             var newTag = new Tag(tag);
-            newTag.Id = tagId; // Attribution de l'ID unique
+            newTag.Id = tagId; // Attribuez un ID unique au tag.
             tags.Add(newTag);
             tagId++;
 
+            // Renvoyez une réponse Created avec l'URL pour obtenir ce tag nouvellement créé.
             return CreatedAtAction(nameof(GetTagById), new { id = newTag.Id }, newTag);
         }
 
@@ -40,17 +44,21 @@ namespace WebApi.Controllers
 
             if (tagToUpdate == null)
             {
-                return NotFound($"Tag with ID {id} not found.");
+                // Si le tag n'est pas trouvé, renvoyez une réponse NotFound avec un message d'erreur.
+                return NotFound($"Tag avec l'ID {id} introuvable.");
             }
 
             if (string.IsNullOrEmpty(updatedTag))
             {
-                return BadRequest("Tag content cannot be empty.");
+                // Si le contenu du tag mis à jour est vide, renvoyez une réponse BadRequest avec un message d'erreur.
+                return BadRequest("Le contenu du tag ne peut pas être vide.");
             }
 
+            // Mettez à jour le contenu du tag.
             tagToUpdate.Name = updatedTag;
 
-            return Ok($"Tag with ID {id} has been updated.");
+            // Renvoyez une réponse Ok avec un message de succès.
+            return Ok($"Tag avec l'ID {id} a été mis à jour.");
         }
 
         [HttpDelete("Delete-a-tag/{id}")]
@@ -60,12 +68,15 @@ namespace WebApi.Controllers
 
             if (tagToDelete == null)
             {
-                return NotFound($"Tag with ID {id} not found.");
+                // Si le tag n'est pas trouvé, renvoyez une réponse NotFound avec un message d'erreur.
+                return NotFound($"Tag avec l'ID {id} introuvable.");
             }
 
+            // Supprimez le tag de la liste.
             tags.Remove(tagToDelete);
 
-            return Ok($"Tag with ID {id} has been deleted.");
+            // Renvoyez une réponse Ok avec un message de succès.
+            return Ok($"Tag avec l'ID {id} a été supprimé.");
         }
 
         [HttpGet("GetTagById/{id}")]
@@ -75,9 +86,11 @@ namespace WebApi.Controllers
 
             if (tag == null)
             {
-                return NotFound($"Tag with ID {id} not found.");
+                // Si le tag n'est pas trouvé, renvoyez une réponse NotFound avec un message d'erreur.
+                return NotFound($"Tag avec l'ID {id} introuvable.");
             }
 
+            // Renvoyez le tag trouvé en réponse.
             return Ok(tag);
         }
     }
