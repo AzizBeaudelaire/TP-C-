@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-using Web.Data.Context;
 using Web.Business.Dto;
 using Web.Business.Models;
-using WebApi.Models;
+using Web.Business.IServices;
+using Web.Data.Context;
 
 namespace Web.Business.Services
 {
@@ -20,55 +19,88 @@ namespace Web.Business.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        // ... autres méthodes
-
         public IEnumerable<TagDto> GetAllTags()
         {
-            var tags = _dbContext.Tags.ToList();
-            return _mapper.Map<IEnumerable<TagDto>>(tags);
+            try
+            {
+                var tags = _dbContext.Tags.ToList();
+                return _mapper.Map<IEnumerable<TagDto>>(tags);
+            }
+            catch (Exception ex)
+            {
+                // Gérer l'erreur (journalisation, notification, etc.)
+                // Vous pouvez également renvoyer une liste vide ou null, ou relancer l'exception selon vos besoins.
+                throw new Exception("Une erreur s'est produite lors de la récupération des tags.", ex);
+            }
         }
 
         public TagDto GetTagById(int tagId)
         {
-            var tag = _dbContext.Tags.FirstOrDefault(t => t.Id == tagId);
-            return _mapper.Map<TagDto>(tag);
+            try
+            {
+                var tag = _dbContext.Tags.FirstOrDefault(t => t.Id == tagId);
+                return _mapper.Map<TagDto>(tag);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Une erreur s'est produite lors de la récupération du tag avec l'ID {tagId}.", ex);
+            }
         }
 
         public TagDto CreateTag(TagDto tagDto)
         {
-            if (tagDto == null)
-                throw new ArgumentNullException(nameof(tagDto));
+            try
+            {
+                if (tagDto == null)
+                    throw new ArgumentNullException(nameof(tagDto));
 
-            var tag = _mapper.Map<Tag>(tagDto);
+                var tag = _mapper.Map<Tag>(tagDto);
 
-            _dbContext.Tags.Add(tag);
-            _dbContext.SaveChanges();
+                _dbContext.Tags.Add(tag);
+                _dbContext.SaveChanges();
 
-            return _mapper.Map<TagDto>(tag);
+                return _mapper.Map<TagDto>(tag);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Une erreur s'est produite lors de la création du tag.", ex);
+            }
         }
 
         public void UpdateTag(int tagId, TagDto updatedTagDto)
         {
-            var existingTag = _dbContext.Tags.FirstOrDefault(t => t.Id == tagId);
-
-            if (existingTag != null)
+            try
             {
-                _mapper.Map(updatedTagDto, existingTag);
-                _dbContext.SaveChanges();
+                var existingTag = _dbContext.Tags.FirstOrDefault(t => t.Id == tagId);
+
+                if (existingTag != null)
+                {
+                    _mapper.Map(updatedTagDto, existingTag);
+                    _dbContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Une erreur s'est produite lors de la mise à jour du tag avec l'ID {tagId}.", ex);
             }
         }
-        
+
         public void DeleteTag(int tagId)
         {
-            var tagToDelete = _dbContext.Tags.FirstOrDefault(t => t.Id == tagId);
-
-            if (tagToDelete != null)
+            try
             {
-                _dbContext.Tags.Remove(tagToDelete);
-                _dbContext.SaveChanges();
+                var tagToDelete = _dbContext.Tags.FirstOrDefault(t => t.Id == tagId);
+
+                if (tagToDelete != null)
+                {
+                    _dbContext.Tags.Remove(tagToDelete);
+                    _dbContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Une erreur s'est produite lors de la suppression du tag avec l'ID {tagId}.", ex);
             }
         }
-
-        // ... autres méthodes
     }
 }

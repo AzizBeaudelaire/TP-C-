@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Web.Business.Models;
 
-namespace WebApi.Models
+namespace Web.Business.Models
 {
     // Classe statique contenant les opérations sur la liste des tâches (listPosts)
     public static class ListPosts

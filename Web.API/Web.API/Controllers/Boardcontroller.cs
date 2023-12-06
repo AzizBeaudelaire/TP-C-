@@ -8,88 +8,117 @@ using WebApi.Data;
 using WebApi.Models;
 using DbContext = Web.Data.Context.DbContext;
 
-namespace Web.API.Controllers;
-
-[ApiController]
-[Route("board")]
-public class BoardController : ControllerBase
+namespace Web.API.Controllers
 {
-    private readonly DbContext _context;
-
-    public BoardController(DbContext context)
+    [ApiController]
+    [Route("board")]
+    public class BoardController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly DbContext _context;
 
-    [HttpGet("TaskBoard")]
-    public ActionResult<IEnumerable<PostGroup>> GetTaskBoard()
-    {
-        var sortedTasks = _context.PostGroups
-            .OrderBy(postGroup => postGroup.Priority.Level)
-            .Include(postGroup => postGroup.Tags)
-            .Include(postGroup => postGroup.Posts)
-            .ToList();
-
-        return Ok(sortedTasks);
-    }
-
-    [HttpGet("SearchTasks")]
-    public ActionResult<IEnumerable<PostGroup>> SearchTasks([FromQuery] string keyword)
-    {
-        var matchingTasks = _context.PostGroups
-            .Where(postGroup => postGroup.Tags.Any(tag => tag.Name.Contains(keyword)) || postGroup.Posts.Any(post => post.Task.Contains(keyword)))
-            .OrderBy(postGroup => postGroup.Priority.Level)
-            .ThenBy(postGroup => string.Join(",", postGroup.Tags.Select(tag => tag.Name)))
-            .ToList();
-
-        return Ok(matchingTasks);
-    }
-
-    [HttpPatch("Set-as-done/{id}")]
-    public ActionResult SetTodoAsDone(int id)
-    {
-        var task = _context.PostGroups
-            .SelectMany(postGroup => postGroup.Posts, (postGroup, post) => new { postGroup, post })
-            .FirstOrDefault(t => t.post.Id == id);
-
-        if (task == null)
+        public BoardController(DbContext context)
         {
-            return NotFound($"Task with ID {id} not found.");
+            _context = context;
         }
 
-        if (task.post.IsDone)
+        [HttpGet("TaskBoard")]
+        public ActionResult<IEnumerable<PostGroup>> GetTaskBoard()
         {
-            return BadRequest("Task is already done.");
+            try
+            {
+                var sortedTasks = _context.PostGroups
+                    .OrderBy(postGroup => postGroup.Priority.Level)
+                    .Include(postGroup => postGroup.Tags)
+                    .Include(postGroup => postGroup.Posts)
+                    .ToList();
+
+                return Ok(sortedTasks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Une erreur s'est produite : {ex.Message}");
+            }
         }
 
-        task.post.IsDone = true;
-        _context.SaveChanges();
-
-        return Ok();
-    }
-
-    [HttpPost("AddTagToTask/{taskId}")]
-    public ActionResult<string> AddTagToTask(int taskId, [FromBody] string tagName)
-    {
-        var task = _context.PostGroups
-            .SelectMany(postGroup => postGroup.Posts, (postGroup, post) => new { postGroup, post })
-            .FirstOrDefault(t => t.post.Id == taskId);
-
-        if (task == null)
+        [HttpGet("SearchTasks")]
+        public ActionResult<IEnumerable<PostGroup>> SearchTasks([FromQuery] string keyword)
         {
-            return NotFound($"Task with ID {taskId} not found.");
+            try
+            {
+                var matchingTasks = _context.PostGroups
+                    .Where(postGroup => postGroup.Tags.Any(tag => tag.Name.Contains(keyword)) || postGroup.Posts.Any(post => post.Task.Contains(keyword)))
+                    .OrderBy(postGroup => postGroup.Priority.Level)
+                    .ThenBy(postGroup => string.Join(",", postGroup.Tags.Select(tag => tag.Name)))
+                    .ToList();
+
+                return Ok(matchingTasks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Une erreur s'est produite : {ex.Message}");
+            }
         }
 
-        if (task.post.Tags == null)
+        [HttpPatch("Set-as-done/{id}")]
+        public ActionResult SetTodoAsDone(int id)
         {
-            task.post.Tags = new List<Tag>();
+            try
+            {
+                var task = _context.PostGroups
+                    .SelectMany(postGroup => postGroup.Posts, (postGroup, post) => new { postGroup, post })
+                    .FirstOrDefault(t => t.post.Id == id);
+
+                if (task == null)
+                {
+                    return NotFound($"Task with ID {id} not found.");
+                }
+
+                if (task.post.IsDone)
+                {
+                    return BadRequest("Task is already done.");
+                }
+
+                task.post.IsDone = true;
+                _context.SaveChanges();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Une erreur s'est produite : {ex.Message}");
+            }
         }
 
-        var newTag = new Tag (tagName);
-        task.post.Tags.Add(newTag);
+        [HttpPost("AddTagToTask/{taskId}")]
+        public ActionResult<string> AddTagToTask(int taskId, [FromBody] string tagName)
+        {
+            try
+            {
+                var task = _context.PostGroups
+                    .SelectMany(postGroup => postGroup.Posts, (postGroup, post) => new { postGroup, post })
+                    .FirstOrDefault(t => t.post.Id == taskId);
 
-        _context.SaveChanges();
+                if (task == null)
+                {
+                    return NotFound($"Task with ID {taskId} not found.");
+                }
 
-        return Ok($"Tag '{tagName}' added to task with ID {taskId}.");
+                if (task.post.Tags == null)
+                {
+                    task.post.Tags = new List<Tag>();
+                }
+
+                var newTag = new Tag(tagName);
+                task.post.Tags.Add(newTag);
+
+                _context.SaveChanges();
+
+                return Ok($"Tag '{tagName}' added to task with ID {taskId}.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Une erreur s'est produite : {ex.Message}");
+            }
+        }
     }
 }

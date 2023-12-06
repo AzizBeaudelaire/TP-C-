@@ -1,19 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using Web.Business.Models;
 using WebApi.Models;
+using Web.Business.Dto;
+using Web.Business.IServices;
+using System.Collections.Generic;
 
 namespace Web.Data.Context
 {
-    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
+    public class TodoDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
-        public DbContext(DbContextOptions<DbContext> options) : base(options)
+        public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options)
         {
         }
 
-        public DbSet<Post>? Posts { get; set; }
-        public DbSet<Tag>? Tags { get; set; }
-        public DbSet<PostGroup>? PostGroups { get; set; }
-        
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<PostGroup> PostGroups { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             /*modelBuilder.Entity<Post>()

@@ -1,6 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using WebApi.Models;
+using Microsoft.EntityFrameworkCore;
+using Web.API.Models;
 using Web.Business.Models;
 using Web.Data.Context;
+using WebApi.Data;
+using DbContext = Web.Data.Context.DbContext;
 
 namespace Web.API.Controllers
 {

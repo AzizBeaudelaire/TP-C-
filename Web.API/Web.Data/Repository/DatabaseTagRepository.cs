@@ -6,38 +6,38 @@ using Web.Business.IRepository;
 using Web.Business.Models;
 using Web.Data.Context;
 using WebApi.Models;
-using DbContext = Web.Data.Context.DbContext;
+using DbContext = Web.Data.Context.TodoDbContext;
 
-namespace WebApi.Data
+namespace Web.Data.Repository
 {
-    public class DatabaseTagRepository : ITagRepository
+    public class DatabaseTodoRepository : ITodoRepository
     {
         private readonly DbContext _dbContext;
 
-        public DatabaseTagRepository(DbContext tagDbContext)
+        public DatabaseTodoRepository(DbContext dbContext)
         {
-            _dbContext = tagDbContext;
+            _dbContext = dbContext;
         }
 
-        public async Task<List<Tag>> GetAllAsync()
+        public async Task<List<Post>> GetAllAsync()
         {
-            return await _dbContext.Tags.ToListAsync();
+            return await _dbContext.Posts.ToListAsync();
         }
 
-        public async Task<Tag?> GetByIdAsync(int id)
+        public async Task<Post> GetByIdAsync(long id)
         {
-            return await _dbContext.Tags.SingleOrDefaultAsync(t => t.Id == id);
+            return await _dbContext.Posts.SingleOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<Tag> AddAsync(Tag item)
+        public async Task<Post> AddAsync(Post item)
         {
-            _dbContext.Tags.Add(item);
+            _dbContext.Posts.Add(item);
             await _dbContext.SaveChangesAsync();
 
             return item;
         }
 
-        public async Task<Tag> UpdateAsync(Tag item)
+        public async Task<Post> UpdateAsync(Post item)
         {
             _dbContext.Attach(item);
             await _dbContext.SaveChangesAsync();
@@ -45,9 +45,9 @@ namespace WebApi.Data
             return item;
         }
 
-        public async Task DeleteAsync(Tag item)
+        public async Task DeleteAsync(Post item)
         {
-            _dbContext.Tags.Remove(item);
+            _dbContext.Posts.Remove(item);
             await _dbContext.SaveChangesAsync();
         }
     }
